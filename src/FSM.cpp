@@ -3,18 +3,15 @@
 #include <unitree/robot/channel/channel_factory.hpp>
 #include <yaml-cpp/yaml.h>
 
-// 상태 헤더 포함
 #include "states/State_FixStand.h"
 #include "states/State_Squat_Down.h"
 #include "states/State_Squat_Up.h"
 #include "states/State_Hello.h"
 #include "states/State_Passive.h"
 
-// 정적 변수 정의
 LowCmd_t* BaseState::lowcmd = nullptr;
 const LowState_t* BaseState::lowstate = nullptr;
 
-// 헬퍼 함수
 StateID stringToStateID(std::string id) {
     if (id == "FixStand") return StateID::FixStand;
     if (id == "SquatDown") return StateID::SquatDown;
@@ -27,23 +24,19 @@ StateID stringToStateID(std::string id) {
 FSM::FSM(std::string networkInterface) 
     : _current_state(nullptr), _first_state_id(StateID::Passive) {
     
-    // 1. 커맨드 메시지 초기화
     _lowcmd_msg = std::make_unique<LowCmd_>();
     BaseState::lowcmd = _lowcmd_msg.get();
     InitLowCmd();
 
-    // 2. 통신 초기화
     unitree::robot::ChannelFactory::Instance()->Init(0, networkInterface);
     _lowcmd_pub.reset(new unitree::robot::ChannelPublisher<LowCmd_>("rt/lowcmd"));
     _lowcmd_pub->InitChannel();
     _lowstate_sub.reset(new unitree::robot::ChannelSubscriber<LowState_>("rt/lowstate"));
     _lowstate_sub->InitChannel(std::bind(&FSM::LowStateHandler, this, std::placeholders::_1), 1);
 
-    // 3. YAML 로드 (여기서 딱 한 번만 수행)
     try {
         YAML::Node config = YAML::LoadFile("config.yaml");
         
-        // 기본 게인 먼저 파싱
         _default_kp = config["default_gain"]["kp"].as<std::vector<float>>();
         _default_kd = config["default_gain"]["kd"].as<std::vector<float>>();
 
@@ -60,7 +53,6 @@ FSM::FSM(std::string networkInterface)
             StateID id = stringToStateID(id_str);
             StateID next = stringToStateID(next_str);
 
-            // 🔥 State 생성 시 _default_kp, _default_kd를 인자로 넘겨줌
             if (id == StateID::FixStand) 
                 _state_map[id] = std::make_shared<State_FixStand>(id, dur, next, _default_kp, _default_kd, params);
             else if (id == StateID::SquatDown) 
@@ -76,7 +68,6 @@ FSM::FSM(std::string networkInterface)
         }
     } catch (const std::exception& e) {
         std::cerr << "[FSM] Config Load Error: " << e.what() << std::endl;
-        // 실패 시 기본값 강제 할당 (안전장치)
         _default_kp.assign(G1_NUM_MOTOR, 60.0f);
         _default_kd.assign(G1_NUM_MOTOR, 2.0f);
         _state_map[StateID::Passive] = std::make_shared<State_Passive>(StateID::Passive);
