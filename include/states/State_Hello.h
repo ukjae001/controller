@@ -6,7 +6,6 @@
 
 class State_Hello : public TimedFSMState {
 public:
-    // 1. 생성자에서 게인 리스트 참조를 받아 부모 클래스로 전달
     State_Hello(StateID id, double dur, StateID next,
                 const std::vector<float>& kp, const std::vector<float>& kd, 
                 YAML::Node params) 
@@ -25,12 +24,8 @@ public:
         }
 
     void enter() override {
-        // 부모의 enter() 호출 (시간 측정 시작)
         TimedFSMState::enter();
         std::cout << "[FSM] >>> Entering State: Hello" << std::endl;
-        
-        // 🔥 더 이상 YAML을 여기서 읽지 않습니다. 
-        // 데이터는 이미 부모의 kp_list, kd_list에 들어있습니다.
     }
 
     void run() override {
@@ -39,20 +34,16 @@ public:
         auto& cmd = *(BaseState::lowcmd);
         double currentTime = getElapsedSeconds();
 
-        // 1. 전신 기본 초기화 (부모의 참조 데이터 사용)
         GainSet();
 
-        // 2. 발목 강성 강화 (지지력 확보)
         for (int idx : {4, 5, 10, 11}) {
             cmd.motor_cmd().at(idx).kp() = ankle_kp; //900.0f;
             cmd.motor_cmd().at(idx).kd() = ankle_kd; //40.0f;
         }
 
-        // 3. 동작 비율 및 보간 계산
         double ratio = std::clamp(currentTime / _duration, 0.0, 1.0);
         double smooth_ratio = (1.0 - std::cos(ratio * M_PI)) / 2.0;
 
-        // 4. 관절별 궤적 로직
         for (int i = 0; i < G1_NUM_MOTOR; ++i) {
             double hello_q = 0.0;
             
