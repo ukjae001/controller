@@ -13,11 +13,11 @@ LowCmd_t* BaseState::lowcmd = nullptr;
 const LowState_t* BaseState::lowstate = nullptr;
 
 StateID stringToStateID(std::string id) {
-    if (id == "FixStand") return StateID::FixStand;
-    if (id == "SquatDown") return StateID::SquatDown;
-    if (id == "SquatUp") return StateID::SquatUp;
-    if (id == "Hello") return StateID::Hello;
-    if (id == "Passive") return StateID::Passive;
+    if (id == "FIXSTAND") return StateID::FixStand;
+    if (id == "SQUATDOWN") return StateID::SquatDown;
+    if (id == "SQUATUP") return StateID::SquatUp;
+    if (id == "HELLO") return StateID::Hello;
+    if (id == "PASSIVE") return StateID::Passive;
     return StateID::Passive;
 }
 
