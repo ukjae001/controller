@@ -1,20 +1,20 @@
 # G1 Sequence Controller Configuration
 sequence:
-  - id: "SquatDown"
+  - id: "SQUATDOWN"
     duration: 8.0
-    next: "SquatUp"
+    next: "SQUATUP"
     params: {}
-  - id: "SquatUp"
+  - id: "SQUATUP"
     duration: 8.0
     next: "FixStand"
     params: {}
-  - id: "FixStand"
+  - id: "FIXSTAND"
     duration: 4.0
-    next: "Hello"
+    next: "HELLO"
     params: {}
-  - id: "Hello"
+  - id: "HELLO"
     duration: 9.0
-    next: "Passive"
+    next: "PASSIVE"
     params:
       ankle_kp: 900.0
       ankle_kd: 40.0
