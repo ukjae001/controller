@@ -16,6 +16,6 @@ int main(int argc, char const *argv[]) {
         "control_loop", UT_CPU_ID_NONE, 2000, &FSM::update, &fsm
     );
 
-    while (true) { pause(); } // sleep 대신 pause로 효율적 대기
+    while (true) { pause(); }
     return 0;
 }
