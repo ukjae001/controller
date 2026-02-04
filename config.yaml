@@ -1,0 +1,46 @@
+# G1 Sequence Controller Configuration
+sequence:
+  - id: "SquatDown"
+    duration: 8.0
+    next: "SquatUp"
+    params: {}
+  - id: "SquatUp"
+    duration: 8.0
+    next: "FixStand"
+    params: {}
+  - id: "FixStand"
+    duration: 4.0
+    next: "Hello"
+    params: {}
+  - id: "Hello"
+    duration: 9.0
+    next: "Passive"
+    params:
+      ankle_kp: 900.0
+      ankle_kd: 40.0
+      elbow_q: 1.6
+      hip_q: -0.25
+      knee_q: 0.1
+      waist_pitch: -0.175
+      waist_roll: -0.6
+      shoulder_roll: -2.3
+      shoulder_yaw: -1.57
+      ankle_roll: -0.08
+      ankle_pitch: 0.01
+
+# 기본 제어 게인
+default_gain:
+  kp: [
+    84, 84, 84, 140, 56, 56,
+    84, 84, 84, 140, 56, 56,
+    84, 56, 56,
+    56, 56, 56, 56, 56, 56, 56,
+    56, 56, 56, 56, 56, 56, 56
+  ]
+  kd: [
+    2, 2, 2, 4, 2, 2,
+    2, 2, 2, 4, 2, 2,
+    2, 2, 2,
+    2, 2, 2, 2, 2, 2, 2,
+    2, 2, 2, 2, 2, 2, 2
+  ]
