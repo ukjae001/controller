@@ -5,11 +5,10 @@
 
 class TimedFSMState : public BaseState {
 public:
-    // 생성자에서 kp, kd 참조를 추가로 받습니다.
     TimedFSMState(StateID id, std::string name, double duration, StateID next,
                   const std::vector<float>& kp, const std::vector<float>& kd)
         : BaseState(id, name), _duration(duration), _next_state(next), 
-          kp_list(kp), kd_list(kd) {} // 여기서 참조 복사
+          kp_list(kp), kd_list(kd) {} 
 
     void enter() override {
         _start_time = std::chrono::steady_clock::now();
@@ -38,8 +37,7 @@ protected:
             BaseState::lowcmd->motor_cmd().at(i).tau() = 0.0;
         }
     }
-    
-    // 🔥 중요: 실제 vector가 아니라 '참조'입니다.
+
     const std::vector<float>& kp_list; 
     const std::vector<float>& kd_list;
 };
