@@ -26,7 +26,6 @@ public:
     const StateID state_id;
     const std::string state_name;
 
-    // FSM에서 전역 관리하는 포인터
     static LowCmd_t* lowcmd;
     static const LowState_t* lowstate;
 };
